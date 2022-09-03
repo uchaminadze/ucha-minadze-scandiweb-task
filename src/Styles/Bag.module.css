@@ -1,0 +1,30 @@
+@import url("./index.css");
+
+.bagContainer{
+    padding: 4rem 6% 3rem 6%;
+}
+
+.order{
+    text-align: "start"; 
+    width: 300px; 
+}
+
+hr{
+    border: none;
+    background-color: #E5E5E5;
+    height: 1px;
+    margin: 40px 0 40px 0;
+}
+
+.orderButton{
+    margin: 20px auto;
+    padding: 1%;
+    height: 45px;
+    width: 100%;
+    font-weight: bold;
+    font-size: 1rem;
+    background-color: var(--primary);
+    text-transform: uppercase;
+    border: none;
+    color: white;
+}

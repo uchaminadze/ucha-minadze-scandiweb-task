@@ -1,0 +1,95 @@
+@import url("./index.css");
+
+.container{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    width: 100%;
+    border: 3px solid white;
+    margin: 10px auto;
+    background-color: white;
+}
+
+hr{
+    margin: 20px auto;
+}
+
+.container h3{
+    font-weight: 700;
+    font-size: 1.7em;
+    margin: 10px auto;
+}
+
+.productDetails{
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.productShowCase{
+    display: flex;
+    flex-direction: row;
+    gap: 10px;
+}
+
+.productImgContainer {
+    overflow: hidden;
+    width: 150px;
+    position: relative;
+    align-self: center;
+}
+
+.productImgArrows{
+    position: absolute;
+    right: 20px;
+    bottom: 10px;
+    display: flex;
+    gap: 8px;
+}
+
+.productImgArrows button{
+    border: none;
+    background: rgba(0, 0, 0, 0.73);
+    width: 1.4rem;
+    height: 1.4rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.productImgSlider{
+    display: flex;
+    width: 100%;
+}
+
+.productQuantity{
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.productQuantity button{
+    width: 45px;
+    height: 45px;
+    background-color: var(--light);
+    border-radius: 3px;
+    font-size: 20px;
+    border: 1px solid var(--dark);
+}
+
+.chosenAttributes{
+    display: flex;
+    gap: 15px;
+    margin-top: 10px;
+    flex-wrap: wrap;
+}
+
+.deleteButton{
+    padding: 1%;
+    border-radius: 5px;
+    font-size: 1rem;
+    background-color: white;
+    color: white;
+    border: 1px solid var(--dark);
+}

@@ -1,0 +1,25 @@
+:root{
+  --light: #ffffff;
+  --dark:  #1D1F22;
+  --primary:  #5ECE7B;
+  font-size: 16px;
+}
+
+*{
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: 'Montserrat', sans-serif;
+}
+
+body{
+  background-color: var(--light);
+  color: var(--dark);
+  padding-bottom: 50px;
+  margin-top: 7%;
+}
+
+button{
+  cursor: pointer;
+  transition: ease-in-out 80ms;
+}
