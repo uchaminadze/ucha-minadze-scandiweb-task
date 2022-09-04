@@ -37,73 +37,72 @@ class Navbar extends Component {
 
   render() {
     return (
-      <nav className={styles.navbar} style={{display: this.state.locationPath === "" ? "none" : "flex"}}>
+      this.state.locationPath !== "" && <nav className={styles.navbar}>
         <div className={styles.categories} >
-          {
-            this.state.locationPath === "/" ? 
-            this.state.categories.map((el, index)=> {
-              
-              return(
-                <span
-                  className={[styles.category, el.name === localStorage.getItem("category") && styles.categroyClicked].join(' ')}
-                  onClick={() => [this.props.changeCategory(el.name), localStorage.setItem("category", el.name)]}
-                  key={index}
-                >
-                  {el.name}
-                </span>
-              )
-            })
-            :
-            ["all", "clothes", "tech"].map((el, index)=> {
-              
-              return(
-                <Link to="/" key={index} className={styles.category} style={{textDecoration: "none"}} onClick={() => localStorage.setItem("category", el)}>{el}</Link>
-              )
-            })
-          }
-        </div>
+        {
+          this.state.locationPath === "/" ? 
+          this.state.categories.map((el, index)=> {
+            
+            return(
+              <span
+                className={[styles.category, el.name === localStorage.getItem("category") && styles.categroyClicked].join(' ')}
+                onClick={() => [this.props.changeCategory(el.name), localStorage.setItem("category", el.name)]}
+                key={index}
+              >
+                {el.name}
+              </span>
+            )
+          })
+          :
+          ["all", "clothes", "tech"].map((el, index)=> {
+            
+            return(
+              <Link to="/" key={index} className={styles.category} style={{textDecoration: "none"}} onClick={() => localStorage.setItem("category", el)}>{el}</Link>
+            )
+          })
+        }
+      </div>
 
 
-        <img src={logo} alt="logo icon" width="38" className={styles.logo} />
+      <img src={logo} alt="logo icon" width="38" className={styles.logo} />
 
-        <div className={styles.misc}>
-          <select
-            className={styles.currency}
-            value={this.state.currency}
-            onChange={this.handleCurrency}
-          >
-            <option className={styles.currencyOption} value="$">
-              $
-            </option>
-            <option className={styles.currencyOption} value="£">
-              £
-            </option>
-            <option className={styles.currencyOption} value="A$">
-              A$
-            </option>
-            <option className={styles.currencyOption} value="¥">
-              ¥
-            </option>
-            <option className={styles.currencyOption} value="₽">
-              ₽
-            </option>
-          </select>
+      <div className={styles.misc}>
+        <select
+          className={styles.currency}
+          value={this.state.currency}
+          onChange={this.handleCurrency}
+        >
+          <option className={styles.currencyOption} value="$">
+            $
+          </option>
+          <option className={styles.currencyOption} value="£">
+            £
+          </option>
+          <option className={styles.currencyOption} value="A$">
+            A$
+          </option>
+          <option className={styles.currencyOption} value="¥">
+            ¥
+          </option>
+          <option className={styles.currencyOption} value="₽">
+            ₽
+          </option>
+        </select>
 
-          <button
-            onClick={() => this.props.showMiniBag(this.state.isMiniBagOpen)}
-            aria-label="show shopping bag button"
-          >
-            <img src={cart} alt="shopping cart icon" />
-            <span className={styles.badge}>{
-              this.props.bagItems.reduce(function(prev, cur) {
-                return prev + cur.quantity;
-              }, 0)
-            }</span>
-          </button>
-        </div>
-        {this.state.isMiniBagOpen && <MiniBag />}
-
-      </nav>
+        <button
+          onClick={() => this.props.showMiniBag(this.state.isMiniBagOpen)}
+          aria-label="show shopping bag button"
+        >
+          <img src={cart} alt="shopping cart icon" />
+          <span className={styles.badge}>{
+            this.props.bagItems.reduce(function(prev, cur) {
+              return prev + cur.quantity;
+            }, 0)
+          }</span>
+        </button>
+      </div>
+      {this.state.isMiniBagOpen && <MiniBag />}
+    </nav> 
     );
   }
 }
