@@ -40,7 +40,7 @@ class Home extends Component {
   showProducts() {
     if (!this.props.data.loading) {
       const categories = this.props.data.categories;
-      const { products } = categories.find(category => category.name === localStorage.getItem("category"))
+      const { products } = categories.find(category => localStorage.getItem('category') ? category.name === localStorage.getItem('category') : category.name === this.state.category)
       return (
         products.map(product => {
           const currentCurrencyPrice = product.prices.find(currency => currency.currency.symbol === this.state.currency)
@@ -59,7 +59,7 @@ class Home extends Component {
         <div className={styles.container} >
           {this.props.data.categories && (
             <>
-              <h1>{localStorage.getItem("category").toUpperCase()}</h1>
+              <h1>{localStorage.getItem('category') ? localStorage.getItem('category').toUpperCase() : this.state.category.toUpperCase()}</h1>
 
               <div className={styles.productsList}>{this.showProducts()}</div>
             </>

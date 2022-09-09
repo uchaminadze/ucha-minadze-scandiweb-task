@@ -31,7 +31,6 @@ class Navbar extends Component {
   }
 
   handleCurrency = (e) => {
-    localStorage.setItem("preferredCurrency", e.target.value);
     this.props.changeCurrency(e.target.value);
   };
 
@@ -42,11 +41,10 @@ class Navbar extends Component {
         {
           this.state.locationPath === "/" ? 
           this.state.categories.map((el, index)=> {
-            
             return(
               <span
-                className={[styles.category, el.name === localStorage.getItem("category") && styles.categroyClicked].join(' ')}
-                onClick={() => [this.props.changeCategory(el.name), localStorage.setItem("category", el.name)]}
+                className={[styles.category, localStorage.getItem('category') ? el.name === localStorage.getItem('category') && styles.categroyClicked : el.name === this.state.category && styles.categroyClicked].join(' ')}
+                onClick={() => [this.props.changeCategory(el.name), localStorage.setItem('category', el.name)]}
                 key={index}
               >
                 {el.name}

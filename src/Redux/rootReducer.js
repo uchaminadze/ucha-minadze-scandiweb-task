@@ -1,10 +1,9 @@
 const currentID = window.location.pathname.split('/')[2]
-const preferredCurrency = localStorage.getItem('preferredCurrency')
 const initialState = {
     category: "all",
     categories: [],
     productID: currentID,
-    currency: preferredCurrency || "USD",
+    currency: "$",
     bag: JSON.parse(localStorage.getItem("bag")) || [],
     isMiniBagOpen: false,
     locationPath: "",
