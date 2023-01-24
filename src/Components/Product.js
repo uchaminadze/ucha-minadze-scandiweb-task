@@ -1,4 +1,4 @@
-import React, { Component } from 'react'
+import React, { PureComponent } from 'react'
 import { Link } from 'react-router-dom'
 import styles from "../Styles/Product.module.css"
 
@@ -7,19 +7,24 @@ import ProductOptions from './ProductOptions'
 import { connect } from 'react-redux'
 import { store } from '../Redux/store'
 
-class Product extends Component {
+class Product extends PureComponent {
   constructor(props){
     super(props)
+
+    const { currency } = store.getState();
+
     this.state = {
-      currency: store.getState().currency,
+      currency: currency,
       isButtonVisible: false
     }
   }
 
   componentDidMount(){
+    const { currency } = store.getState();
+
     this.unsubscribe = store.subscribe(()=>{
       this.setState({
-        currency: store.getState().currency,
+        currency: currency,
       })
     })
 
@@ -45,14 +50,14 @@ class Product extends Component {
       
       >
 
-        <Link to={`/product/${this.props.data.id}`}>
+        <Link to={`/product/${this.props.data.id}`} className={styles.productImgWrapper}>
           <img
             src={this.props.data.gallery[0]}
             height="300"
             width="auto"
             title={this.props.data.name}
             className={styles.productImg}
-            onClick={()=>this.props.changeProductID(this.props.data.id)}
+            onClick={()=>[this.props.changeProductID(this.props.data.id), localStorage.setItem('productid', this.props.data.id)]}
             alt="product img"
           />
         </Link>

@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React, { PureComponent } from "react";
 import { connect } from "react-redux";
 import { store } from "../Redux/store";
 import styles from "../Styles/BagItem.module.css";
@@ -6,7 +6,7 @@ import deleteIcon from "../Static/delete.svg";
 import leftArrow from '../Static/leftArrow.svg';
 import rightArrow from '../Static/rightArrow.svg';
 
-class BagItem extends Component {
+class BagItem extends PureComponent {
   constructor(props) {
     super(props);
     this.state = {
@@ -20,8 +20,11 @@ class BagItem extends Component {
 
   componentDidMount() {
     this.unsub = store.subscribe(() => {
+      const { bag } = store.getState();
+
       const x = this.props.data.id;
-      const item = store.getState().bag.find((item) => {
+
+      const item = bag.find((item) => {
         return item.id === x;
       });
 
@@ -29,7 +32,6 @@ class BagItem extends Component {
         quantity: item?.quantity ? item?.quantity : 0,
       });
     });
-
   }
 
   componentWillUnmount() {

@@ -1,22 +1,27 @@
-import React, { Component, createRef } from "react";
+import React, { PureComponent, createRef } from "react";
 import { connect } from "react-redux";
 import BagItem from "./BagItem";
 import styles from "../Styles/MiniBag.module.css";
 import { Link } from "react-router-dom";
 import { store } from "../Redux/store";
 
-class MiniBag extends Component {
+class MiniBag extends PureComponent {
   constructor(props) {
     super(props);
+
+    const {isMiniBagOpen} = store.getState();
+
     this.state = {
-      isMiniBagOpen: store.getState().isMiniBagOpen,
+      isMiniBagOpen: isMiniBagOpen,
     };
   }
 
   
   componentDidMount(){
+    const {category, currency, isMiniBagOpen} = store.getState();
+    
     this.unsubscribe = store.subscribe(()=>{
-      this.setState({category: store.getState().category, currency: store.getState().currency, isMiniBagOpen: store.getState().isMiniBagOpen})
+      this.setState({category: category, currency: currency, isMiniBagOpen: isMiniBagOpen})
     })
     document.addEventListener("mousedown", this.handleClickOutside);
   }

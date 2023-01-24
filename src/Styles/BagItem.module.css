@@ -37,6 +37,7 @@ hr{
     width: 150px;
     position: relative;
     align-self: center;
+    min-height: 225px;
 }
 
 .productImgArrows{

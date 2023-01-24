@@ -1,53 +1,32 @@
-import React, { Component } from "react";
+import React, { PureComponent } from "react";
 import { Link } from "react-router-dom";
 import styles from "../Styles/Navbar.module.css";
 import cart from "../Static/cart.svg";
 import logo from "../Static/logo.svg";
 import { connect } from "react-redux";
-import { store } from "../Redux/store";
 import MiniBag from "./MiniBag";
 
-class Navbar extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      currency: store.getState().currency,
-      isMiniBagOpen: store.getState().isMiniBagOpen,
-      category: store.getState().category,
-      categories: store.getState().categories,
-      locationPath: store.getState().locationPath
-    };
-
-  }
-
-  componentDidMount() {
-    this.unsubscribe = store.subscribe(() => {
-      this.setState({ currency: store.getState().currency, categories: store.getState().categories, isMiniBagOpen: store.getState().isMiniBagOpen, category: store.getState().category, locationPath: store.getState().locationPath });
-    });
-  }
-
-  componentWillUnmount() {
-    this.unsubscribe();
-  }
-
+class Navbar extends PureComponent {
+  
   handleCurrency = (e) => {
     this.props.changeCurrency(e.target.value);
   };
-
+  
   render() {
     return (
-      this.state.locationPath !== "" && <nav className={styles.navbar}>
+      <nav className={styles.navbar}>
         <div className={styles.categories} >
         {
-          this.state.locationPath === "/" ? 
-          this.state.categories.map((el, index)=> {
+          this.props.locationPath === "/all" ||
+          this.props.locationPath === "/clothes" ||
+          this.props.locationPath === "/tech" ?
+          this.props.categories.map((el, index)=> {
             return(
               <span
-                className={[styles.category, localStorage.getItem('category') ? el.name === localStorage.getItem('category') && styles.categroyClicked : el.name === this.state.category && styles.categroyClicked].join(' ')}
-                onClick={() => [this.props.changeCategory(el.name), localStorage.setItem('category', el.name)]}
+                onClick={() => [this.props.changeCategory(el.name),this.props.detectLocation(`/${el.name}`)]}
                 key={index}
               >
-                {el.name}
+                <Link to={`/${el.name}`} key={index} className={[styles.category, el.name === this.props.path && styles.categoryClicked].join(' ')} style={{textDecoration: "none"}} onClick={() => this.props.detectLocation(el.name)}>{el.name}</Link>
               </span>
             )
           })
@@ -55,19 +34,21 @@ class Navbar extends Component {
           ["all", "clothes", "tech"].map((el, index)=> {
             
             return(
-              <Link to="/" key={index} className={styles.category} style={{textDecoration: "none"}} onClick={() => localStorage.setItem("category", el)}>{el}</Link>
+              <Link to={`/${el}`} key={index} className={styles.category} style={{textDecoration: "none"}}>{el}</Link>
             )
           })
         }
       </div>
 
 
-      <img src={logo} alt="logo icon" width="38" className={styles.logo} />
+      <Link to="/all" onClick={() => this.props.detectLocation("/all")}>
+        <img src={logo} alt="logo icon" width="38" className={styles.logo} />
+      </Link>
 
       <div className={styles.misc}>
         <select
           className={styles.currency}
-          value={this.state.currency}
+          value={this.props.currency}
           onChange={this.handleCurrency}
         >
           <option className={styles.currencyOption} value="$">
@@ -88,7 +69,7 @@ class Navbar extends Component {
         </select>
 
         <button
-          onClick={() => this.props.showMiniBag(this.state.isMiniBagOpen)}
+          onClick={() => this.props.showMiniBag(this.props.isMiniBagOpen)}
           aria-label="show shopping bag button"
         >
           <img src={cart} alt="shopping cart icon" />
@@ -99,7 +80,7 @@ class Navbar extends Component {
           }</span>
         </button>
       </div>
-      {this.state.isMiniBagOpen && <MiniBag />}
+      {this.props.isMiniBagOpen && <MiniBag />}
     </nav> 
     );
   }
@@ -108,6 +89,11 @@ class Navbar extends Component {
 const mapStateToProps = (state) => {
   return {
     bagItems: state.bag,
+    categories: state.categories,
+    isMiniBagOpen: state.isMiniBagOpen,
+    currency: state.currency,
+    locationPath: state.locationPath,
+    path: state.locationPath.split('').splice(1, state.locationPath.length - 1).join('')
   };
 };
 
@@ -115,6 +101,8 @@ const mapDispatchToProps = (dispatch) => {
   return {
     changeCategory: (category) =>
       dispatch({ type: "CATEGORY_UPDATE", category: category }),
+    detectLocation: (locationPath) => 
+      dispatch({ type: "CHANGED_LOCATION_PATH", locationPath: locationPath }),
     changeCurrency: (currency) =>
       dispatch({ type: "CURRENCY_UPDATE", currency: currency }),
     showMiniBag: (isMiniBagOpen) =>

@@ -1,49 +1,31 @@
-import React, { Component } from 'react'
+import React, { PureComponent } from 'react'
 import styles from "../Styles/HomePage.module.css"
 import Product from '../Components/Product'
 import { graphql } from '@apollo/client/react/hoc';
-import { gql } from "@apollo/client"
-
-import { store } from "../Redux/store";
 import { connect } from 'react-redux';
 import { compose } from 'redux';
+import { ALL_PRODUCTS } from '../api/allProducts'; 
 
-class Home extends Component {
-
-  constructor(props) {
-    super(props)
-    this.state = {
-      category: store.getState().category,
-      categories: store.getState().categories,
-      currency: store.getState().currency,
-      isMiniBagOpen: store.getState().isMiniBagOpen,
-      locationPath: store.getState().locationPath,
-
-    }
-  }
-
+class Home extends PureComponent {
+  
   componentDidMount() {
-    this.unsubscribe = store.subscribe(() => {
-      this.setState({ category: store.getState().category, categories: store.getState().categories, currency: store.getState().currency, isMiniBagOpen: store.getState().isMiniBagOpen, locationPath: store.getState().locationPath })
-    })
     this.props.detectLocation(this.props.location.pathname)
     setTimeout(() => {
       this.props.storeCategories(this.props.data.categories)
-    }, 500)
+    }, 1000)
   }
-
-
-  componentWillUnmount() {
-    this.unsubscribe();
-  }
+  
 
   showProducts() {
     if (!this.props.data.loading) {
+      const {pathname} = this.props.location
+      const path = pathname.split('').splice(1, pathname.length - 1).join('')
+      console.log(pathname)
       const categories = this.props.data.categories;
-      const { products } = categories.find(category => localStorage.getItem('category') ? category.name === localStorage.getItem('category') : category.name === this.state.category)
+      const { products } = categories.find(category => category.name === path)
       return (
         products.map(product => {
-          const currentCurrencyPrice = product.prices.find(currency => currency.currency.symbol === this.state.currency)
+          const currentCurrencyPrice = product.prices.find(currency => currency.currency.symbol === this.props.currency)
 
           return <Product data={product} price={currentCurrencyPrice} key={product.id} />
         })
@@ -53,13 +35,15 @@ class Home extends Component {
   }
 
   render() {
+    const {pathname} = this.props.location
+    const path = pathname.split('').splice(1, pathname.length - 1).join('')
 
     return (
       <>
         <div className={styles.container} >
           {this.props.data.categories && (
             <>
-              <h1>{localStorage.getItem('category') ? localStorage.getItem('category').toUpperCase() : this.state.category.toUpperCase()}</h1>
+              <h1>{path.toUpperCase()}</h1>
 
               <div className={styles.productsList}>{this.showProducts()}</div>
             </>
@@ -70,36 +54,12 @@ class Home extends Component {
   }
 }
 
-const GET_DATA = gql`{
-  categories{
-    name
-    products{
-      id
-      __typename @skip(if: true)
-      name
-      brand
-      inStock
-      gallery
-      prices{
-        amount
-        currency{
-          symbol
-          label
-        }
-      }
-      attributes{
-        type
-        name
-        items{
-          id
-          __typename @skip(if: true)
-          value
-          displayValue
-        }
-      }
-    }
+
+const mapStateToProps = (state) => {
+  return{
+    currency: state.currency
   }
-}`
+}
 
 
 const mapDispatchToProps = (dispatch) => {
@@ -110,6 +70,6 @@ const mapDispatchToProps = (dispatch) => {
 };
 
 export default compose(
-  graphql(GET_DATA),
-  connect(null, mapDispatchToProps)
+  graphql(ALL_PRODUCTS),
+  connect(mapStateToProps, mapDispatchToProps)
 )(Home);

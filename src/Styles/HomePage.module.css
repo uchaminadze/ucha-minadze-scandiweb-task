@@ -3,8 +3,9 @@
 .container {
     text-align: center;
     font-size: 24px;
-    padding: 0 6%;
-
+    padding: 0 86.4px;
+    max-width: 1526.4px;
+    margin: 0 auto;
 }
 
 .container h1{
@@ -25,8 +26,12 @@
 
 @media only screen and (max-width: 1000px) {
     .productsList{
-        display: grid;
-        grid-template-columns: 1fr;
-        gap: 10px;
+        grid-template-columns: repeat(2, 1fr);
     }
-  }
+}
+
+@media only screen and (max-width: 678px) {
+    .productsList{
+        grid-template-columns: repeat(1, 1fr);
+    }
+}

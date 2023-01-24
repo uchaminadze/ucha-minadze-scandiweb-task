@@ -1,3 +1,5 @@
+import { ADD_TO_BAG, CATEGORIES, CATEGORY_UPDATE, CHANGED_LOCATION_PATH, CLEAR_BAG, CURRENCY_UPDATE, MINI_BAG_OPEN, PRODUCT_ID_UPDATE, QUANTITY_DEC, QUANTITY_INC, REMOVE_BAG_ITEM } from "./actionTypes"
+
 const currentID = window.location.pathname.split('/')[2]
 const initialState = {
     category: "all",
@@ -11,36 +13,36 @@ const initialState = {
 
 const rootReducer = (state = initialState, action) => {
 
-    
-    
 
-    if(action.type === "CATEGORY_UPDATE"){
+
+
+    if (action.type === CATEGORY_UPDATE) {
         return {
             ...state,
             category: action.category
         }
     }
 
-    if(action.type === "CURRENCY_UPDATE"){
+    if (action.type === CURRENCY_UPDATE) {
         return {
             ...state,
             currency: action.currency
         }
     }
 
-    if(action.type === "PRODUCT_ID_UPDATE"){
+    if (action.type === PRODUCT_ID_UPDATE) {
         return {
             ...state,
             productID: action.productID
         }
     }
 
-    if(action.type === "ADD_TO_BAG"){        
-        const matchingProducts = state.bag.find((el)=> JSON.stringify(el.attributes) === JSON.stringify(action.product.attributes))
-        if(matchingProducts){
+    if (action.type === ADD_TO_BAG) {
+        const matchingProducts = state.bag.find((el) => JSON.stringify(el.attributes) === JSON.stringify(action.product.attributes))
+        if (matchingProducts) {
             matchingProducts.quantity++
-            localStorage.setItem("bag", JSON.stringify(state.bag,matchingProducts))
-        }else{
+            localStorage.setItem("bag", JSON.stringify(state.bag, matchingProducts))
+        } else {
             localStorage.setItem("bag", JSON.stringify([...state.bag, action.product]))
             return {
                 ...state,
@@ -49,7 +51,7 @@ const rootReducer = (state = initialState, action) => {
         }
     }
 
-    if(action.type === "CLEAR_BAG"){
+    if (action.type === CLEAR_BAG) {
         localStorage.removeItem("bag")
         return {
             ...state,
@@ -57,7 +59,7 @@ const rootReducer = (state = initialState, action) => {
         }
     }
 
-    if(action.type === "REMOVE_BAG_ITEM"){
+    if (action.type === REMOVE_BAG_ITEM) {
         const newBag = state.bag.filter(bagItem => bagItem.id !== action.id)
         localStorage.setItem("bag", JSON.stringify(newBag))
 
@@ -67,68 +69,68 @@ const rootReducer = (state = initialState, action) => {
         }
     }
 
-    if(action.type === "QUANTITY_INC"){        
-        
-        const newBag = state.bag.map(item=>{
-            if(item.id===action.id){
-                if(item.quantity < 10){
-                    return{
+    if (action.type === QUANTITY_INC) {
+
+        const newBag = state.bag.map(item => {
+            if (item.id === action.id) {
+                if (item.quantity < 10) {
+                    return {
                         ...item,
-                        quantity: Number(item.quantity)+1
-                    } 
+                        quantity: Number(item.quantity) + 1
+                    }
                 } else return item
-                
+
 
             } else return item
         })
-        
+
         localStorage.setItem("bag", JSON.stringify(newBag))
-        
+
         return {
             ...state,
             bag: newBag
         }
     }
 
-    if(action.type === "QUANTITY_DEC"){        
-        
-        const newBag = state.bag.map(item=>{
-            if(item.id===action.id){
-                if(item.quantity > 1){
-                    return{
+    if (action.type === QUANTITY_DEC) {
+
+        const newBag = state.bag.map(item => {
+            if (item.id === action.id) {
+                if (item.quantity > 1) {
+                    return {
                         ...item,
-                        quantity: Number(item.quantity)-1
-                    } 
+                        quantity: Number(item.quantity) - 1
+                    }
                 } else return item
-                
+
 
             } else return item
         })
-        
-        
+
+
         localStorage.setItem("bag", JSON.stringify(newBag))
-        
+
         return {
             ...state,
             bag: newBag
         }
     }
 
-    if(action.type === "MINI_BAG_OPEN"){
+    if (action.type === MINI_BAG_OPEN) {
         return {
             ...state,
             isMiniBagOpen: !action.isMiniBagOpen
         }
     }
 
-    if(action.type === "CHANGED_LOCATION_PATH"){
+    if (action.type === CHANGED_LOCATION_PATH) {
         return {
             ...state,
             locationPath: action.locationPath
         }
     }
 
-    if(action.type === "CATEGORIES"){
+    if (action.type === CATEGORIES) {
         return {
             ...state,
             categories: action.categories
@@ -136,8 +138,8 @@ const rootReducer = (state = initialState, action) => {
     }
 
     else return state
-    
+
 
 }
 
-export default rootReducer
+export default rootReducer;

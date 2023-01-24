@@ -1,28 +1,29 @@
-import React, { Component } from 'react'
+import React, { PureComponent } from 'react'
 import ProductOptions from '../Components/ProductOptions'
 import styles from "../Styles/ProductDetails.module.css"
-
-import { gql } from "@apollo/client"
-
-import { Query } from '@apollo/client/react/components'
-
 import { store } from '../Redux/store';
 import { connect } from 'react-redux'
+import ExactProduct from '../api/exactProduct'
 
-class ProductDetails extends Component {
+class ProductDetails extends PureComponent {
   constructor(props) {
     super(props)
+
+    const {productID, currency, locationPath} = store.getState();
+
     this.state = {
-      productID: store.getState().productID,
-      currency: store.getState().currency,
+      productID: productID,
+      currency: currency,
       imageIndex: 0,
-      locationPath: store.getState().locationPath
+      locationPath: locationPath
     }
   }
 
   componentDidMount() {
+    const {productID, currency, locationPath} = store.getState();
+
     this.unsubscribe = store.subscribe(() => {
-      this.setState({ productID: store.getState().productID, currency: store.getState().currency, locationPath: store.getState().locationPath })
+      this.setState({ productID: productID, currency: currency, locationPath: locationPath })
     })
     this.props.detectLocation(this.props.location.pathname)
   }
@@ -36,37 +37,8 @@ class ProductDetails extends Component {
   }
 
   render() {
-    const GET_DATA = gql`{
-      product(id : ${JSON.stringify(this.state.productID)}){
-        name
-        description
-        brand
-        inStock
-        gallery
-        prices{
-          amount
-          currency{
-            label
-            symbol
-          }
-        }
-        attributes{
-          id
-          __typename @skip(if: true)
-          name
-          type
-          items{
-            id
-            __typename @skip(if: true)
-            displayValue
-            value
-          }
-        }
-      }
-    }`;
-
     return (
-      <Query query={GET_DATA}>
+      <ExactProduct>
         {({ data, loading, error }) => {
 
           if (error) return <h1 style={{ textAlign: "center", margin: "10rem" }}>An Error Occured.</h1>
@@ -110,7 +82,7 @@ class ProductDetails extends Component {
           }
         }
         }
-      </Query>
+      </ExactProduct>
     )
   }
 }

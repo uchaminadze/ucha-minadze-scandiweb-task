@@ -1,17 +1,20 @@
-import React, { Component } from 'react';
+import React, { PureComponent } from 'react';
 import { connect } from 'react-redux';
 import { store } from '../Redux/store';
 import styles from '../Styles/Product.module.css';
 
-class ProductOptions extends Component {
+class ProductOptions extends PureComponent {
 
   constructor(props) {
     super(props)
+
+    const {locationPath} = store.getState();
+
     this.state = {
       product: {
         attributes: {}
       },
-      locationPath: store.getState().locationPath,
+      locationPath: locationPath,
       chosenSize: "",
       chosenColor: "",
       chosenUsbOption: "",
@@ -41,26 +44,26 @@ class ProductOptions extends Component {
     this.setState({
       product: product
     })
-
-
   }
 
   componentDidMount() {
+    const {locationPath} = store.getState();
+
     this.unsubscribe = store.subscribe(()=>{
       this.setState({
-        locationPath: store.getState().locationPath 
+        locationPath: locationPath 
       })
     })
 
-    this.createProductObject()
-
-    this.props.data.attributes.forEach(attribute => {
-      this.setState({chosenSize: attribute.items[0].value})
-      this.setState({chosenColor: attribute.items[0].displayValue})
-      this.setState({chosenUsbOption: attribute.items[0].displayValue})
-      this.setState({chosenTouchId: attribute.items[0].displayValue})
-      this.setState({chosenCapacity: this.props.data.attributes[0].items[0].displayValue})
-    });
+    this.createProductObject();
+    console.log('this.props.chosenColor :>> ', this.props.chosenColor);
+    this.setState({
+      chosenSize: this.props.chosenSize,
+      chosenColor: this.props.chosenColor,
+      chosenUsbOption: this.props.chosenUsbOption,
+      chosenTouchId: this.props.chosenTouchId,
+      chosenCapacity: this.props.chosenCapacity
+    })
   }
 
   componentWillUnmount(){
@@ -85,26 +88,29 @@ class ProductOptions extends Component {
 
     this.props.addtoBag(this.state.product);
 
-    this.props.data.attributes.forEach(attribute => {
-      this.setState({chosenSize: attribute.items[0].value})
-      this.setState({chosenColor: attribute.items[0].displayValue})
-      this.setState({chosenUsbOption: attribute.items[0].displayValue})
-      this.setState({chosenTouchId: attribute.items[0].displayValue})
-      this.setState({chosenCapacity: this.props.data.attributes[0].items[0].displayValue})
+    this.setState({
+      chosenSize: this.props.chosenSize,
+      chosenColor: this.props.chosenColor,
+      chosenUsbOption: this.props.chosenUsbOption,
+      chosenTouchId: this.props.chosenTouchId,
+      chosenCapacity: this.props.chosenCapacity
     });
-
 
     this.createProductObject();
   }
 
   render() {
-
+    console.log(this.props.attributes)
     return (
       <div className={styles.productDetails}>
         {this.props.data.attributes.map((attribute, index) => {
           return (
             <div key={index}>
-              {this.props.data.inStock && this.state.locationPath !== "/" && <div key={attribute.name}>
+              {this.props.data.inStock &&
+               this.state.locationPath !== "/all" && 
+               this.state.locationPath !== "/clothes" && 
+               this.state.locationPath !== "/tech" && 
+               <div key={attribute.name}>
 
                 <span key={attribute.name} className={styles.productOptionName}>{attribute.name}: <b>{this.state.product.attributes[attribute.name]}</b></span>
                 <br />
@@ -203,8 +209,10 @@ class ProductOptions extends Component {
         {!this.props.data.inStock && <span className={styles.outOfStockText} >out of stock</span>}
 
         {this.props.data.inStock && 
-        this.state.locationPath !== "/"
-           && <span className={styles.productOptionName}>Price:</span>}
+        this.state.locationPath !== "/all" &&
+        this.state.locationPath !== "/clothes" &&
+        this.state.locationPath !== "/tech" && 
+          <span className={styles.productOptionName}>Price:</span>}
 
         {this.props.data.inStock ?
          <h2 style={{fontSize: "20px"}}>{this.props.symbol}{this.props.amount}</h2> 
@@ -215,7 +223,11 @@ class ProductOptions extends Component {
       
           
 
-        {this.props.data.inStock && this.state.locationPath !== "/" && <button onClick={this.handleBag} className={styles.addToBagProductDetails}>
+        {this.props.data.inStock && 
+        this.state.locationPath !== "/all" && 
+        this.state.locationPath !== "/clothes" && 
+        this.state.locationPath !== "/tech" && 
+        <button onClick={this.handleBag} className={styles.addToBagProductDetails}>
           add to bag
         </button>}
 
@@ -232,6 +244,16 @@ class ProductOptions extends Component {
   }
 }
 
+const mapStateToProps = (state, props) => {
+  return {
+     chosenSize: props.data?.attributes[0]?.items.map((el) => el)[0].value,
+     chosenColor: props.data?.attributes[1]?.items.map((el) => el)[0].displayValue,
+     chosenUsbOption: props.data?.attributes[0]?.items.map((el) => el)[0].displayValue,
+     chosenTouchId: props.data?.attributes[0]?.items.map((el) => el)[0].displayValue,
+     chosenCapacity: props.data?.attributes[0]?.items.map((el) => el)[0].displayValue
+  }
+}
+
 
 const mapDispatchToProps = (dispatch) => {
   return {
@@ -239,4 +261,4 @@ const mapDispatchToProps = (dispatch) => {
   }
 }
 
-export default connect(null, mapDispatchToProps)(ProductOptions)
+export default connect(mapStateToProps, mapDispatchToProps)(ProductOptions)

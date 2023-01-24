@@ -1,10 +1,10 @@
-import React, { Component } from 'react'
+import React, { PureComponent } from 'react'
 
 import { Link } from 'react-router-dom'
 
 import styles from "../Styles/ErrorPage.module.css"
 
-class Error extends Component {
+class Error extends PureComponent {
   render() {
     return (
       <div className={styles.container}>
@@ -13,7 +13,7 @@ class Error extends Component {
             <h1>404</h1>
           </div>
 
-          <Link to="/">
+          <Link to="/all">
             <button className={styles.button} aria-label="Navigate to home button">Home</button>
           </Link>
 

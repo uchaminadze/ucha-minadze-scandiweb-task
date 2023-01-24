@@ -27,6 +27,12 @@
     transition: ease-in-out 150ms;
 }
 
+
+.productImgWrapper{
+    padding: 10px;
+}
+
+
 .outOfStock{
     opacity: 0.5;
 }

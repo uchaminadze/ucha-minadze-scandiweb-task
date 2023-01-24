@@ -1,5 +1,5 @@
-import React, { Component } from 'react'
-import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
+import React, { PureComponent } from 'react'
+import { BrowserRouter as Router, Redirect, Route, Switch } from "react-router-dom";
 
 import Navbar from './Components/Navbar';
 import Home from './Pages/Home';
@@ -7,7 +7,7 @@ import ProductDetails from './Pages/ProductDetails';
 import Bag from './Pages/Bag';
 import Error from './Pages/Error';
 
-class App extends Component {
+class App extends PureComponent {
 
 
   render() {
@@ -16,9 +16,16 @@ class App extends Component {
         <Navbar/>
 
         <Switch>
-          <Route exact path='/' component={Home}/>
-          <Route path='/bag' component={Bag}/>
           <Route path='/product/:id' component={ProductDetails}/>
+          <Route path='/bag' component={Bag}/>
+          <Route exact path='/:categories' component={Home}/>
+          <Route exact path='/' render={() => {
+            return(
+              <Redirect to='/all'/>
+            )
+          }}>
+
+          </Route>
           <Route path='*' component={Error}/>
         </Switch>
         

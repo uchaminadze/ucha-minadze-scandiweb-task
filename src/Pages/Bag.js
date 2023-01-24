@@ -1,9 +1,9 @@
-import React, { Component } from "react";
+import React, { PureComponent } from "react";
 import { connect } from "react-redux";
 import BagItem from "../Components/BagItem";
 import styles from '../Styles/Bag.module.css';
 
-class Bag extends Component {
+class Bag extends PureComponent {
   _isMounted = false;
 
   componentDidMount() {

@@ -1,7 +1,9 @@
 @import url("./index.css");
 
 .bagContainer{
-    padding: 4rem 6% 3rem 6%;
+    padding: 86.4px;
+    max-width: 1526.4px;
+    margin: 0 auto;
 }
 
 .order{

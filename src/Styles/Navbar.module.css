@@ -10,7 +10,7 @@
     height: fit-content;
     background-color: var(--light);
     color: var(--light);
-    padding: 10px 5%;
+    padding: 10px 86.4px;
     z-index: 1000;
 }
 
@@ -35,16 +35,17 @@
 .categories {
     display: flex;
     justify-content: space-between;
+    gap: 30px;
+    padding: 15px;
 }
 
 .category{
-    margin: 0 15px;
     font-weight: light;
     color: #1D1F22;
     font-size: 1.5em;
     border-bottom: 3px solid transparent;
-    padding: 15px 0px;
     cursor: pointer;
+    text-transform: capitalize;
 }
 
 .category path{
@@ -60,7 +61,7 @@
     text-transform: capitalize;
 }
 
-.categroyClicked{
+.categoryClicked{
     border-bottom: 3px solid var(--primary);
     color: var(--primary);
 }
