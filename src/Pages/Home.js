@@ -12,7 +12,7 @@ class Home extends PureComponent {
     this.props.detectLocation(this.props.location.pathname)
     setTimeout(() => {
       this.props.storeCategories(this.props.data.categories)
-    }, 1000)
+    }, 500)
   }
   
 
