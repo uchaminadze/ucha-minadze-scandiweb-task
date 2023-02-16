@@ -9,7 +9,7 @@ class ProductDetails extends PureComponent {
   constructor(props) {
     super(props)
 
-    const {productID, currency, locationPath} = store.getState();
+    const { productID, currency, locationPath } = store.getState();
 
     this.state = {
       productID: productID,
@@ -20,12 +20,13 @@ class ProductDetails extends PureComponent {
   }
 
   componentDidMount() {
-    const {productID, currency, locationPath} = store.getState();
+    const { productID, currency, locationPath } = store.getState();
 
     this.unsubscribe = store.subscribe(() => {
       this.setState({ productID: productID, currency: currency, locationPath: locationPath })
     })
     this.props.detectLocation(this.props.location.pathname)
+    this.props.detectPageUserIsOn("product")
   }
 
   componentWillUnmount() {
@@ -41,9 +42,9 @@ class ProductDetails extends PureComponent {
       <ExactProduct>
         {({ data, loading, error }) => {
 
-          if (error) return <h1 style={{ textAlign: "center", margin: "10rem" }}>An Error Occured.</h1>
+          if (error) return <h1 className={styles.errorText} >An Error Occured.</h1>
 
-          if (loading) return <h1 style={{ textAlign: "center", margin: "10rem" }}>Loading...</h1>
+          if (loading) return <h1 className={styles.loadingText} >Loading...</h1>
 
           else {
             const currentCurrencyPrice = data.product.prices.find(currency => currency.currency.symbol === this.state.currency)
@@ -87,13 +88,19 @@ class ProductDetails extends PureComponent {
   }
 }
 
+const mapStateToProps = (state) => {
+  return {
+    pageUserIsOn: state.pageUserIsOn
+  }
+}
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    detectLocation: (locationPath) => dispatch({ type: "CHANGED_LOCATION_PATH", locationPath: locationPath })
+    detectLocation: (locationPath) => dispatch({ type: "CHANGED_LOCATION_PATH", locationPath: locationPath }),
+    detectPageUserIsOn: (pageUserIsOn) => dispatch({ type: "PAGE__USER__IS__ON", pageUserIsOn: pageUserIsOn }),
   };
 };
 
 
 
-export default connect(null, mapDispatchToProps)(ProductDetails);
+export default connect(mapStateToProps, mapDispatchToProps)(ProductDetails);

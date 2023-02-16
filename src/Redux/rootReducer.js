@@ -1,4 +1,4 @@
-import { ADD_TO_BAG, CATEGORIES, CATEGORY_UPDATE, CHANGED_LOCATION_PATH, CLEAR_BAG, CURRENCY_UPDATE, MINI_BAG_OPEN, PRODUCT_ID_UPDATE, QUANTITY_DEC, QUANTITY_INC, REMOVE_BAG_ITEM } from "./actionTypes"
+import { ADD_TO_BAG, CATEGORIES, CATEGORY_UPDATE, CHANGED_LOCATION_PATH, CLEAR_BAG, CURRENCY_UPDATE, MINI_BAG_OPEN, PAGE__USER__IS__ON, PRODUCT_ID_UPDATE, QUANTITY_DEC, QUANTITY_INC, REMOVE_BAG_ITEM } from "./actionTypes"
 
 const currentID = window.location.pathname.split('/')[2]
 const initialState = {
@@ -9,6 +9,7 @@ const initialState = {
     bag: JSON.parse(localStorage.getItem("bag")) || [],
     isMiniBagOpen: false,
     locationPath: "",
+    pageUserIsOn: ""
 }
 
 const rootReducer = (state = initialState, action) => {
@@ -127,6 +128,13 @@ const rootReducer = (state = initialState, action) => {
         return {
             ...state,
             locationPath: action.locationPath
+        }
+    }
+
+    if (action.type === PAGE__USER__IS__ON) {
+        return {
+            ...state,
+            pageUserIsOn: action.pageUserIsOn
         }
     }
 

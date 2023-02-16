@@ -1,83 +1,89 @@
 @import "./index.css";
 
-.container{
-    display: flex;
-    flex-direction: row;
-    gap: 100px;
-    padding: 86.4px;
-    max-width: 1526.4px;
-    margin: 0 auto;
+.errorText,
+.loadingText {
+  text-align: center;
+  margin: 10rem;
+}
+
+.container {
+  display: flex;
+  flex-direction: row;
+  gap: 100px;
+  padding: 86.4px;
+  max-width: 1526.4px;
+  margin: 0 auto;
 }
 
 @media only screen and (max-width: 1040px) {
-    .container{
-        flex-direction: column;
-        justify-content: space-evenly;
-    }
-
-    .productImages{
-        align-self: center;
-        flex-direction: column;
-    }
-
-    .productImages img{
-        align-self: center;
-    }
-
-    .productPreview{
-        flex-direction: row !important;
-        order: 2;
-        justify-content: center;
-    }
+  .container {
+    flex-direction: column;
+    justify-content: space-evenly;
   }
 
-.productInfo{
-    display: flex;
+  .productImages {
+    align-self: center;
     flex-direction: column;
-    width: clamp(20%, 300px, 100%);
-    gap: 40px;
+  }
+
+  .productImages img {
+    align-self: center;
+  }
+
+  .productPreview {
+    flex-direction: row !important;
+    order: 2;
+    justify-content: center;
+  }
 }
 
-.productInfo h1{
-    font-size: 1.6rem;
+.productInfo {
+  display: flex;
+  flex-direction: column;
+  width: clamp(20%, 300px, 100%);
+  gap: 40px;
 }
 
-.productImages{
-    text-align: center;
-    display: flex;
-    gap: 40px;
+.productInfo h1 {
+  font-size: 1.6rem;
 }
 
-.productPreview{
-    display: flex;
-    flex-direction: column;
-    gap: 40px;
-    flex-wrap: wrap;
+.productImages {
+  text-align: center;
+  display: flex;
+  gap: 40px;
 }
 
-.productImages img{
-    border-radius: 10px;
-    box-shadow: 3px 3px 20px rgba(0, 0, 0, 0.35);
-    cursor: pointer;
+.productPreview {
+  display: flex;
+  flex-direction: column;
+  gap: 40px;
+  flex-wrap: wrap;
 }
 
-.addtoBag{
-    margin: 20px auto;
-    width: 80%;
-    height: 40px;
-    background-color: var(--light);
-    color: var(--dark);
-    font-weight: 800;
-    font-size: 1.5rem;
-    border: 2px solid var(--primary);
-    cursor: pointer;
-    transition: ease-in-out 150ms;
+.productImages img {
+  border-radius: 10px;
+  box-shadow: 3px 3px 20px rgba(0, 0, 0, 0.35);
+  cursor: pointer;
 }
-.addtoBag:hover{
-    opacity: 1;
-    background-color: var(--primary);
-    border: 2px solid var(--dark);
+
+.addtoBag {
+  margin: 20px auto;
+  width: 80%;
+  height: 40px;
+  background-color: var(--light);
+  color: var(--dark);
+  font-weight: 800;
+  font-size: 1.5rem;
+  border: 2px solid var(--primary);
+  cursor: pointer;
+  transition: ease-in-out 150ms;
 }
-.addtoBag:active{
-    transform: scale(0.95);
+.addtoBag:hover {
+  opacity: 1;
+  background-color: var(--primary);
+  border: 2px solid var(--dark);
+}
+.addtoBag:active {
+  transform: scale(0.95);
 }

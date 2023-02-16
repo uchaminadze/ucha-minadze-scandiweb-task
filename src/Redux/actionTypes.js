@@ -8,4 +8,5 @@ export const QUANTITY_INC = "QUANTITY_INC";
 export const QUANTITY_DEC = "QUANTITY_DEC";
 export const MINI_BAG_OPEN = "MINI_BAG_OPEN";
 export const CHANGED_LOCATION_PATH = "CHANGED_LOCATION_PATH";
+export const PAGE__USER__IS__ON = "PAGE__USER__IS__ON";
 export const CATEGORIES = "CATEGORIES";

@@ -4,28 +4,29 @@ import BagItem from "./BagItem";
 import styles from "../Styles/MiniBag.module.css";
 import { Link } from "react-router-dom";
 import { store } from "../Redux/store";
+import Utils from "../Utils";
 
 class MiniBag extends PureComponent {
   constructor(props) {
     super(props);
 
-    const {isMiniBagOpen} = store.getState();
+    const { isMiniBagOpen } = store.getState();
 
     this.state = {
       isMiniBagOpen: isMiniBagOpen,
     };
   }
 
-  
-  componentDidMount(){
-    const {category, currency, isMiniBagOpen} = store.getState();
-    
-    this.unsubscribe = store.subscribe(()=>{
-      this.setState({category: category, currency: currency, isMiniBagOpen: isMiniBagOpen})
+
+  componentDidMount() {
+    const { category, currency, isMiniBagOpen } = store.getState();
+
+    this.unsubscribe = store.subscribe(() => {
+      this.setState({ category: category, currency: currency, isMiniBagOpen: isMiniBagOpen })
     })
     document.addEventListener("mousedown", this.handleClickOutside);
   }
-  
+
   myRef = createRef();
 
   handleClickOutside = (e) => {
@@ -33,35 +34,36 @@ class MiniBag extends PureComponent {
       this.props.showMiniBag(this.state.isMiniBagOpen)
     }
   };
-  componentWillUnmount(){
+  componentWillUnmount() {
     this.unsubscribe();
     document.removeEventListener("mousedown", this.handleClickOutside);
   }
 
-
-
-
-  
   render() {
     const totalPrices = [];
+    const {
+      calculateTotal,
+      calculatePrice,
+      calculateNumberOfItems
+    } = new Utils();
 
     return (
       <div className={styles.backdrop} >
         <div className={styles.minibag} ref={this.myRef}>
           <h1>
-            My Bag: {this.props.bagItems.reduce(function(prev, cur) {
-                return prev + cur.quantity;
-            }, 0)} items
+            My Bag: {calculateNumberOfItems(this.props.bagItems)} item{calculateNumberOfItems(this.props.bagItems) === 1 ? "" : "s"}
           </h1>
 
           <div className={styles.items}>
             {this.props.bagItems.map((item) => {
-              const currentCurrencyPrice = item?.prices?.find(
-                (currency) => currency.currency.symbol === this.props.currency
-              );
+              let currentCurrencyPrice;
+
+              currentCurrencyPrice = calculatePrice(item, this.props.currency)
+
               totalPrices.push(
                 Math.ceil(item.quantity * currentCurrencyPrice?.amount)
               );
+
               return (
                 <BagItem
                   key={item?.id}
@@ -73,16 +75,16 @@ class MiniBag extends PureComponent {
           </div>
 
           <div className={styles.totalPrice}>
-            <h2 style={{ textAlign: "center" }}>
+            <h2>
               Total:
             </h2>
             <h2>
-              {this.props.currency} {totalPrices.reduce((prev, nxt) => prev + nxt, 0)}{" "}
+              {this.props.currency} {calculateTotal(totalPrices)}{" "}
             </h2>
           </div>
 
           <div className={styles.showFullBag}>
-            <Link to="/bag" className={styles.viewBag} onClick={()=> this.props.showMiniBag(this.state.isMiniBagOpen)}>
+            <Link to="/bag" className={styles.viewBag} onClick={() => this.props.showMiniBag(this.state.isMiniBagOpen)}>
               View Bag
             </Link>
 

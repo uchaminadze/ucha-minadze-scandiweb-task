@@ -1,27 +1,24 @@
 import React, { PureComponent } from 'react'
 import styles from "../Styles/HomePage.module.css"
 import Product from '../Components/Product'
-import { graphql } from '@apollo/client/react/hoc';
 import { connect } from 'react-redux';
-import { compose } from 'redux';
-import { ALL_PRODUCTS } from '../api/allProducts'; 
 
 class Home extends PureComponent {
-  
+
   componentDidMount() {
     this.props.detectLocation(this.props.location.pathname)
+    this.props.detectPageUserIsOn("home")
     setTimeout(() => {
-      this.props.storeCategories(this.props.data.categories)
+      this.props.storeCategories(this.props.categories)
     }, 500)
   }
-  
+
 
   showProducts() {
-    if (!this.props.data.loading) {
-      const {pathname} = this.props.location
+    if (!this.props.loading) {
+      const { pathname } = this.props.location
       const path = pathname.split('').splice(1, pathname.length - 1).join('')
-      console.log(pathname)
-      const categories = this.props.data.categories;
+      const categories = this.props.categories;
       const { products } = categories.find(category => category.name === path)
       return (
         products.map(product => {
@@ -35,13 +32,12 @@ class Home extends PureComponent {
   }
 
   render() {
-    const {pathname} = this.props.location
+    const { pathname } = this.props.location
     const path = pathname.split('').splice(1, pathname.length - 1).join('')
-
     return (
       <>
         <div className={styles.container} >
-          {this.props.data.categories && (
+          {this.props.categories && (
             <>
               <h1>{path.toUpperCase()}</h1>
 
@@ -56,8 +52,9 @@ class Home extends PureComponent {
 
 
 const mapStateToProps = (state) => {
-  return{
-    currency: state.currency
+  return {
+    currency: state.currency,
+    pageUserIsOn: state.pageUserIsOn
   }
 }
 
@@ -65,11 +62,9 @@ const mapStateToProps = (state) => {
 const mapDispatchToProps = (dispatch) => {
   return {
     detectLocation: (locationPath) => dispatch({ type: "CHANGED_LOCATION_PATH", locationPath: locationPath }),
+    detectPageUserIsOn: (pageUserIsOn) => dispatch({ type: "PAGE__USER__IS__ON", pageUserIsOn: pageUserIsOn }),
     storeCategories: (categories) => dispatch({ type: "CATEGORIES", categories: categories })
   };
 };
 
-export default compose(
-  graphql(ALL_PRODUCTS),
-  connect(mapStateToProps, mapDispatchToProps)
-)(Home);
+export default connect(mapStateToProps, mapDispatchToProps)(Home);

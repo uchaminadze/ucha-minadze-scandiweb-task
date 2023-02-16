@@ -8,18 +8,18 @@ class ProductOptions extends PureComponent {
   constructor(props) {
     super(props)
 
-    const {locationPath} = store.getState();
+    const { locationPath } = store.getState();
 
     this.state = {
       product: {
         attributes: {}
       },
       locationPath: locationPath,
-      chosenSize: "",
-      chosenColor: "",
-      chosenUsbOption: "",
-      chosenTouchId: "",
-      chosenCapacity: ""
+      Size: "",
+      Color: "",
+      'With USB 3 ports': "",
+      'Touch ID in keyboard': "",
+      Capacity: ""
     }
   }
 
@@ -32,7 +32,7 @@ class ProductOptions extends PureComponent {
       quantity: 1,
       id: Math.floor(Math.random() * 1000),
       attributes: {},
-      allAttributes: this.props.data.attributes.map((item)=>{
+      allAttributes: this.props.data.attributes.map((item) => {
         return item
       })
     }
@@ -47,40 +47,39 @@ class ProductOptions extends PureComponent {
   }
 
   componentDidMount() {
-    const {locationPath} = store.getState();
+    const { locationPath } = store.getState();
 
-    this.unsubscribe = store.subscribe(()=>{
+    this.unsubscribe = store.subscribe(() => {
       this.setState({
-        locationPath: locationPath 
+        locationPath: locationPath
       })
     })
 
     this.createProductObject();
-    console.log('this.props.chosenColor :>> ', this.props.chosenColor);
     this.setState({
-      chosenSize: this.props.chosenSize,
-      chosenColor: this.props.chosenColor,
-      chosenUsbOption: this.props.chosenUsbOption,
-      chosenTouchId: this.props.chosenTouchId,
-      chosenCapacity: this.props.chosenCapacity
+      Size: this.props.Size,
+      Color: this.props.Color,
+      'With USB 3 ports': this.props['With USB 3 ports'],
+      'Touch ID in keyboard': this.props['Touch ID in keyboard'],
+      Capacity: this.props.Capacity ? this.props.Capacity[0].displayValue : this.props.Capacity
     })
   }
 
-  componentWillUnmount(){
+  componentWillUnmount() {
     this.unsubscribe();
   }
-  
+
 
   handleChoice = (attributeName, itemID) => {
     this.setState({
-        product: {
-          ...this.state.product,
-  
-          attributes: {
-            ...this.state.product.attributes,
-            [attributeName]: itemID,
-          }
+      product: {
+        ...this.state.product,
+
+        attributes: {
+          ...this.state.product.attributes,
+          [attributeName]: itemID,
         }
+      }
     })
   }
 
@@ -89,147 +88,79 @@ class ProductOptions extends PureComponent {
     this.props.addtoBag(this.state.product);
 
     this.setState({
-      chosenSize: this.props.chosenSize,
-      chosenColor: this.props.chosenColor,
-      chosenUsbOption: this.props.chosenUsbOption,
-      chosenTouchId: this.props.chosenTouchId,
-      chosenCapacity: this.props.chosenCapacity
+      Size: this.props.Size,
+      Color: this.props.Color,
+      'With USB 3 ports': this.props['With USB 3 ports'],
+      'Touch ID in keyboard': this.props['Touch ID in keyboard'],
+      Capacity: this.props.Capacity ? this.props.Capacity[0].displayValue : this.props.Capacity
     });
 
     this.createProductObject();
   }
 
   render() {
-    console.log(this.props.attributes)
     return (
       <div className={styles.productDetails}>
         {this.props.data.attributes.map((attribute, index) => {
+          const stateKey = attribute.name.replace(/\s+/g, ' ');
           return (
             <div key={index}>
               {this.props.data.inStock &&
-               this.state.locationPath !== "/all" && 
-               this.state.locationPath !== "/clothes" && 
-               this.state.locationPath !== "/tech" && 
-               <div key={attribute.name}>
+                this.props.pageUserIsOn !== "home" && <div key={attribute.name}>
 
-                <span key={attribute.name} className={styles.productOptionName}>{attribute.name}: <b>{this.state.product.attributes[attribute.name]}</b></span>
-                <br />
+                  <span key={attribute.name} className={styles.productOptionName}>{attribute.name}: <b>{this.state.product.attributes[attribute.name]}</b></span>
+                  <br />
 
-                
-              <div className={styles.productOptions}>
-                {attribute.name === "Capacity" && attribute.items.map((item) => {
-                  return (
-                    <button
-                      style={{
-                        backgroundColor: item.displayValue === this.state.chosenCapacity ? "black" : "white",
-                        color: item.displayValue === this.state.chosenCapacity ? "white" : "black",
-                        border: "1px solid black"
-                      }}
-                      className={styles.productAttribute}
-                      key={item.id}
-                      onClick={(e) => this.handleChoice(attribute.name, item.id, this.setState({chosenCapacity: e.target.innerText}))}
-                    >
-                      {item.displayValue}
-                    </button>
-                  );
-                })}
-
-                {attribute.name === "Size" && attribute.items.map((item) => {
-                  return (
-                    <button
-                      style={{
-                        backgroundColor: item.value === this.state.chosenSize ? "black" : "white",
-                        color: item.value === this.state.chosenSize ? "white" : "black",
-                        border: "1px solid black"
-                      }}
-                      className={styles.productAttribute}
-                      key={item.id}
-                      onClick={(e) => this.handleChoice(attribute.name, item.id, this.setState({chosenSize: e.target.innerText}))}
-                    >
-                      {item.value}
-                    </button>
-                  );
-                })}
-
-                {attribute.name === "Color" && attribute.items.map((item) => {
-                  return (
-                    <button
-                      style={{
-                        backgroundColor: item.value,
-                        border: item.displayValue === this.state.chosenColor ? "2px solid #5ECE7B" : "2px solid black",
-                        width: "2.3rem", height: "2rem"
-                      }}
-                      key={item.id}
-                      onClick={(e) => this.handleChoice(attribute.name, item.id, this.setState({chosenColor: item.displayValue}))}
-                    >
-                    </button>
-                  );
-                })}
-
-                {attribute.name === "With USB 3 ports" && attribute.items.map((item) => {
-                  return (
-                    <button
-                      style={{
-                        backgroundColor: item.value === this.state.chosenUsbOption? "black" : "white",
-                        color: item.value === this.state.chosenUsbOption ? "white" : "black",
-                        border: "1px solid black"
-                      }}
-                      className={styles.productAttribute}
-                      key={item.id}
-                      onClick={(e) => this.handleChoice(attribute.name, item.id, this.setState({chosenUsbOption: item.value}))}
-                    >
-                      {item.value}
-                    </button>
-                  );
-                })}
-
-                {attribute.name === "Touch ID in keyboard" && attribute.items.map((item) => {
-                  return (
-                    <button
-                      style={{
-                        backgroundColor: item.value === this.state.chosenTouchId ? "black" : "white",
-                        color: item.value === this.state.chosenTouchId ? "white" : "black",
-                        border: "1px solid black"
-                      }}
-                      className={styles.productAttribute}
-                      key={item.id}
-                      onClick={(e) => this.handleChoice(attribute.name, item.id, this.setState({chosenTouchId: item.value}))}
-                    >
-                      {item.value}
-                    </button>
-                  );
-                })}
-              </div>
-              </div>}
+                  <div className={styles.productOptions}>
+                    {attribute.items.map((item) => {
+                      return (
+                        attribute.name === "Color" ?
+                          <button
+                            style={{
+                              backgroundColor: item.value,
+                            }}
+                            className={item.displayValue === this.state[stateKey] ? styles.chosenColorOption : styles.colorOption}
+                            key={item.id}
+                            onClick={(e) => this.handleChoice(attribute.name, item.id, this.setState({ Color: item.displayValue }))}
+                          >
+                          </button>
+                          :
+                          <button
+                            className={item.value === this.state[stateKey] ? styles.chosenAttributeOption : styles.attributeOption}
+                            key={item.id}
+                            onClick={(e) => this.handleChoice(attribute.name, item.id, this.setState({ [stateKey]: item.value }))}
+                          >
+                            {item.value}
+                          </button>
+                      );
+                    })
+                    }
+                  </div>
+                </div>
+              }
             </div>
 
           );
         })}
-        
+
         {!this.props.data.inStock && <span className={styles.outOfStockText} >out of stock</span>}
 
-        {this.props.data.inStock && 
-        this.state.locationPath !== "/all" &&
-        this.state.locationPath !== "/clothes" &&
-        this.state.locationPath !== "/tech" && 
-          <span className={styles.productOptionName}>Price:</span>}
+        {this.props.data.inStock &&
+          this.props.pageUserIsOn !== "home" && <span className={styles.productOptionName}>Price:</span>}
 
         {this.props.data.inStock ?
-         <h2 style={{fontSize: "20px"}}>{this.props.symbol}{this.props.amount}</h2> 
-         : 
-         <h2 style={{fontSize: "20px"}}>Out of stock</h2>
+          <h3 >{this.props.symbol}{this.props.amount}</h3>
+          :
+          <h5 >Out of stock</h5>
         }
-          
-      
-          
 
-        {this.props.data.inStock && 
-        this.state.locationPath !== "/all" && 
-        this.state.locationPath !== "/clothes" && 
-        this.state.locationPath !== "/tech" && 
-        <button onClick={this.handleBag} className={styles.addToBagProductDetails}>
-          add to bag
-        </button>}
+
+
+
+        {this.props.data.inStock &&
+          this.props.pageUserIsOn !== "home" && <button onClick={this.handleBag} className={styles.addToBagProductDetails}>
+            add to bag
+          </button>}
 
         {this.props.data.inStock && this.props.isButtonVisible && <button onClick={this.handleBag} className={styles.addToBag}>
           <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -246,11 +177,12 @@ class ProductOptions extends PureComponent {
 
 const mapStateToProps = (state, props) => {
   return {
-     chosenSize: props.data?.attributes[0]?.items.map((el) => el)[0].value,
-     chosenColor: props.data?.attributes[1]?.items.map((el) => el)[0].displayValue,
-     chosenUsbOption: props.data?.attributes[0]?.items.map((el) => el)[0].displayValue,
-     chosenTouchId: props.data?.attributes[0]?.items.map((el) => el)[0].displayValue,
-     chosenCapacity: props.data?.attributes[0]?.items.map((el) => el)[0].displayValue
+    Size: props.data?.attributes[0]?.items.map((el) => el)[0].value,
+    Color: props.data?.attributes[1]?.items.map((el) => el)[0].displayValue,
+    'With USB 3 ports': props.data?.attributes[1]?.items.map((el) => el)[0].displayValue,
+    'Touch ID in keyboard': props.data?.attributes[1]?.items.map((el) => el)[0].displayValue,
+    Capacity: props.data?.attributes[0]?.items.map((el) => el),
+    pageUserIsOn: state.pageUserIsOn
   }
 }
 

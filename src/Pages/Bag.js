@@ -2,6 +2,7 @@ import React, { PureComponent } from "react";
 import { connect } from "react-redux";
 import BagItem from "../Components/BagItem";
 import styles from '../Styles/Bag.module.css';
+import Utils from "../Utils";
 
 class Bag extends PureComponent {
   _isMounted = false;
@@ -21,18 +22,18 @@ class Bag extends PureComponent {
 
   render() {
     const totalPrices = [];
-
+    const {
+      calculateTotal,
+      calculatePrice,
+      calculateNumberOfItems
+    } = new Utils();
     return (
       <div className={styles.bagContainer}>
         <h2>Cart</h2>
         <hr />
-        <div
-
-        >
+        <div>
           {this.props.bagItems.map((item) => {
-            const currentCurrencyPrice = item.prices.find(
-              (currency) => currency.currency.symbol === this.props.currency
-            );
+            let currentCurrencyPrice = calculatePrice(item, this.props.currency)
 
             totalPrices.push(
               Math.ceil(item.quantity * currentCurrencyPrice.amount)
@@ -48,13 +49,11 @@ class Bag extends PureComponent {
         </div>
 
         <div className={styles.order}>
-          <p>Quantity: <b>{this.props.bagItems.reduce(function (prev, cur) {
-            return prev + cur.quantity;
-          }, 0)}</b></p>
+          <p>Quantity: <b>{calculateNumberOfItems(this.props.bagItems)}</b></p>
 
           <p>
             Total: <b>
-              {totalPrices.reduce((prev, nxt) => prev + nxt, 0)}{" "}
+              {calculateTotal(totalPrices)}{" "}
               {this.props.currency}
             </b>
           </p>

@@ -8,7 +8,7 @@ import { connect } from 'react-redux'
 import { store } from '../Redux/store'
 
 class Product extends PureComponent {
-  constructor(props){
+  constructor(props) {
     super(props)
 
     const { currency } = store.getState();
@@ -19,35 +19,34 @@ class Product extends PureComponent {
     }
   }
 
-  componentDidMount(){
+  componentDidMount() {
     const { currency } = store.getState();
 
-    this.unsubscribe = store.subscribe(()=>{
+    this.unsubscribe = store.subscribe(() => {
       this.setState({
         currency: currency,
       })
     })
-
   }
 
-  componentWillUnmount(){
+  componentWillUnmount() {
     this.unsubscribe()
   }
 
   render() {
-    const currentCurrencyPrice = this.props.data.prices.find(currency=> currency.currency.symbol === this.state.currency);
+    const currentCurrencyPrice = this.props.data.prices.find(currency => currency.currency.symbol === this.props.currency);
 
-    
+
     return (
-      <div className={[styles.container, !this.props.data.inStock && styles.outOfStock].join(' ')} 
+      <div className={[styles.container, !this.props.data.inStock && styles.outOfStock].join(' ')}
         onMouseEnter={() => {
-          this.setState({isButtonVisible: true})
+          this.setState({ isButtonVisible: true })
         }}
 
         onMouseLeave={() => {
-          this.setState({isButtonVisible: false})
+          this.setState({ isButtonVisible: false })
         }}
-      
+
       >
 
         <Link to={`/product/${this.props.data.id}`} className={styles.productImgWrapper}>
@@ -57,32 +56,32 @@ class Product extends PureComponent {
             width="auto"
             title={this.props.data.name}
             className={styles.productImg}
-            onClick={()=>[this.props.changeProductID(this.props.data.id), localStorage.setItem('productid', this.props.data.id)]}
+            onClick={() => [this.props.changeProductID(this.props.data.id), localStorage.setItem('productid', this.props.data.id)]}
             alt="product img"
           />
         </Link>
 
-        
+
 
         <div className={styles.details}>
 
-            <h4>{this.props.data.name}</h4>
+          <h4>{this.props.data.name}</h4>
 
-            <h5>
-              {this.props.data.inStock ? 
+          <h5>
+            {this.props.data.inStock ?
               <>
                 {currentCurrencyPrice.currency.symbol}
                 {currentCurrencyPrice.amount}
               </>
               :
               ""
-              }
-            {}
-            </h5>
-            <ProductOptions
-              data={this.props.data}
-              isButtonVisible={this.state.isButtonVisible}
-            />
+            }
+            { }
+          </h5>
+          <ProductOptions
+            data={this.props.data}
+            isButtonVisible={this.state.isButtonVisible}
+          />
 
         </div>
 
@@ -91,10 +90,18 @@ class Product extends PureComponent {
   }
 }
 
-const mapDispatchToProps = (dispatch) => {
-  return{
-    changeProductID: (productID)=> dispatch({type: "PRODUCT_ID_UPDATE", productID: productID}),
+
+const mapStateToProps = (state) => {
+  return {
+    currency: state.currency
   }
 }
 
-export default connect(null, mapDispatchToProps)(Product)
+
+const mapDispatchToProps = (dispatch) => {
+  return {
+    changeProductID: (productID) => dispatch({ type: "PRODUCT_ID_UPDATE", productID: productID }),
+  }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(Product)
