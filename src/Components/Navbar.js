@@ -38,7 +38,7 @@ class Navbar extends PureComponent {
   render() {
     return (
       <nav className={styles.navbar}>
-        <NavbarLeftSide navCategories={this.state.navCategories}/>
+        <NavbarLeftSide location={this.props.location} history={this.props.history} navCategories={this.state.navCategories}/>
 
         <Link to="/all" onClick={() => this.props.detectLocation("/all")}>
           <img src={logo} alt="logo icon" width="38" className={styles.logo} />

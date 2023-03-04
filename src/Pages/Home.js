@@ -1,10 +1,22 @@
-import React, { PureComponent } from 'react'
+import React, { Fragment, PureComponent } from 'react'
 import styles from "../Styles/HomePage.module.css"
 import Product from '../Components/Product'
 import { connect } from 'react-redux';
+import Sidebar from '../Components/Sidebar';
 
 class Home extends PureComponent {
 
+  state = {
+    categories: [],
+    filteredProducts: []
+  }
+  
+  static getDerivedStateFromProps(props, state) {
+    return{
+      categories: props.categories
+    }
+  }
+  
   componentDidMount() {
     this.props.detectLocation(this.props.location.pathname)
     this.props.detectPageUserIsOn("home")
@@ -13,13 +25,34 @@ class Home extends PureComponent {
     }, 500)
   }
 
-
+  
   showProducts() {
     if (!this.props.loading) {
       const { pathname } = this.props.location
       const path = pathname.split('').splice(1, pathname.length - 1).join('')
       const categories = this.props.categories;
-      const { products } = categories.find(category => category.name === path)
+
+      const filteredProducts = categories.map((category) => {
+        const filteredProducts = category.products.filter((product) =>
+          product.attributes.some((attribute) => 
+            attribute.items.some((item) => {
+              return categories.find(category => category.name === path).products.some((products) => {
+                return products.attributes.some((singleP) => {
+                  return singleP.items.some((singleAttr) => {
+                    return Object.values(this.props.attributes).some((el) => {
+                      return JSON.stringify(el) === JSON.stringify(item) && JSON.stringify(el) === JSON.stringify(singleAttr)
+                    })
+                  })
+                })
+              })
+            })
+          )
+        );
+        return { ...category, products: filteredProducts };
+      });
+
+      const products = Object.values(this.props.attributes).find((el) => el) ? filteredProducts[0].products : categories.find(category => category.name === path).products;
+
       return (
         products.map(product => {
           const currentCurrencyPrice = product.prices.find(currency => currency.currency.symbol === this.props.currency)
@@ -34,14 +67,18 @@ class Home extends PureComponent {
   render() {
     const { pathname } = this.props.location
     const path = pathname.split('').splice(1, pathname.length - 1).join('')
+
     return (
       <>
-        <div className={styles.container} >
+        <div className={styles.homePage} >
           {this.props.categories && (
             <>
-              <h1>{path.toUpperCase()}</h1>
 
-              <div className={styles.productsList}>{this.showProducts()}</div>
+              <Sidebar props={this.props}/>
+              <div className={styles.container}>
+                <h1>{path.toUpperCase()}</h1>
+                <div className={styles.productsList}>{this.showProducts()}</div>
+              </div>
             </>
           )}
         </div>
@@ -54,7 +91,8 @@ class Home extends PureComponent {
 const mapStateToProps = (state) => {
   return {
     currency: state.currency,
-    pageUserIsOn: state.pageUserIsOn
+    pageUserIsOn: state.pageUserIsOn,
+    attributes: state.attributes
   }
 }
 

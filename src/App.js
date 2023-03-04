@@ -18,6 +18,7 @@ class App extends PureComponent {
       navCategories: []
     }
   }
+
   static getDerivedStateFromProps(props, state) {
     return {
       navCategories: props.data.categories
@@ -30,8 +31,11 @@ class App extends PureComponent {
   render() {
     return (
       <Router>
-        <Navbar navCategories={this.state.navCategories} />
-
+        <Route
+          render={({ location, history }) => (
+            <Navbar navCategories={this.state.navCategories} location={location} history={history} />
+          )}
+        />
         <Switch>
           <Route path='/product/:id' component={ProductDetails} />
           <Route path='/bag' component={Bag} />

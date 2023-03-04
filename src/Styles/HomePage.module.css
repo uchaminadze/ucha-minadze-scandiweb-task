@@ -1,18 +1,23 @@
 @import "./index.css";
 
-.container {
+.homePage {
     text-align: center;
     font-size: 24px;
-    padding: 0 86.4px;
     max-width: 1526.4px;
-    margin: 0 auto;
+    margin: 10rem auto;
+    padding: 0 5rem 0 1rem;
+    display: grid;
+    grid-template-columns: 1fr 2.5fr;
+    gap: 50px;
 }
 
-.container h1{
-    margin: 7rem auto 2rem auto;
+.homePage h1{
+    margin: 0rem auto 2rem auto;
     text-align: left;
     font-size: 2rem;
 }
+
+
 
 .productsList{
     display: grid;
@@ -23,6 +28,15 @@
     height: max-content;
     z-index: 1;
 }
+
+
+@media only screen and (max-width: 1284px) {
+    .homePage{
+        grid-template-columns: 1fr;
+        padding: 0 1rem 0 1rem;
+    }
+}
+
 
 @media only screen and (max-width: 1000px) {
     .productsList{

@@ -20,6 +20,7 @@ class NavbarLeftSide extends PureComponent {
     }
 
     render() {
+        const {search} = this.props.location;
         return (
             <div className={styles.categories} >
                 {
@@ -29,7 +30,7 @@ class NavbarLeftSide extends PureComponent {
                                 onClick={() => [this.props.changeCategory(el.name), this.props.detectLocation(`/${el.name}`)]}
                                 key={index}
                             >
-                                <Link to={`/${el.name}`} key={index} className={this.updateClassName(el)} onClick={() => this.props.detectLocation(el.name)}>{el.name}</Link>
+                                <Link to={`/${el.name}${search}`} key={index} className={this.updateClassName(el)} onClick={() => this.props.detectLocation(el.name)}>{el.name}</Link>
                             </span>
                         )
                     })
