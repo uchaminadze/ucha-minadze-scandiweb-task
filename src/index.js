@@ -14,7 +14,7 @@ import { Provider } from 'react-redux';
 import { BrowserRouter as Router } from 'react-router-dom';
 
 const client = new ApolloClient({
-  uri: 'http://localhost:4000/',
+  uri: 'https://api-n36p.onrender.com/',
   cache: new InMemoryCache()
 });
 

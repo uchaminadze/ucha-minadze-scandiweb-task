@@ -87,12 +87,12 @@ select{
 
     .colors{
         display: flex;
-        justify-content: start;
+        justify-content: flex-start;
     }
     
     .options{
         display: flex;
-        justify-content: start;
+        justify-content: flex-start;
         gap: 2.5rem;
     }
 }
