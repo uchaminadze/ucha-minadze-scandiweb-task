@@ -19,6 +19,12 @@
 
 
 
+.loadingText{
+    text-align: center;
+}
+
+
+
 .productsList{
     display: grid;
     grid-template-columns: repeat(3, 1fr);

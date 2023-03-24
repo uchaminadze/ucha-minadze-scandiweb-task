@@ -8,7 +8,8 @@ class Home extends PureComponent {
 
   state = {
     categories: [],
-    filteredProducts: []
+    filteredProducts: [],
+    isLoading: false
   }
   
   static getDerivedStateFromProps(props, state) {
@@ -22,12 +23,13 @@ class Home extends PureComponent {
     this.props.detectPageUserIsOn("home")
     setTimeout(() => {
       this.props.storeCategories(this.props.categories)
+      this.setState({isLoading: false})
     }, 500)
+    this.setState({isLoading: true})
   }
 
   
   showProducts() {
-    if (!this.props.loading) {
       const { pathname } = this.props.location
       const path = pathname.split('').splice(1, pathname.length - 1).join('')
       const categories = this.props.categories;
@@ -60,20 +62,21 @@ class Home extends PureComponent {
           return <Product data={product} price={currentCurrencyPrice} key={product.id} />
         })
       )
-
-    } else return <h1>Loading...</h1>
   }
 
+
+  
   render() {
     const { pathname } = this.props.location
     const path = pathname.split('').splice(1, pathname.length - 1).join('')
+    
+    if(this.state.isLoading) return <h1 className={styles.loadingText}>Loading...</h1> 
 
     return (
       <>
-        <div className={styles.homePage} >
+        <div className={styles.homePage}>
           {this.props.categories && (
             <>
-
               <Sidebar props={this.props}/>
               <div className={styles.container}>
                 <h1>{path.toUpperCase()}</h1>
